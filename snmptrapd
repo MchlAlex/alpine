@@ -6,7 +6,7 @@ snmpd) : ${OPTS:=$SNMPD_FLAGS} ;;
 esac
 
 pidfile="/var/run/${SVCNAME}.pid"
-command="/usr/local/bin/${SVCNAME}"
+command="/usr/local/sbin/${SVCNAME}"
 command_args="-p ${pidfile} ${OPTS}"
 required_files="/usr/local/etc/snmp/${SVCNAME}.conf"
 extra_started_commands="reload"
