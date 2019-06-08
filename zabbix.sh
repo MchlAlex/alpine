@@ -1,9 +1,9 @@
 #!/bin/ash
 DBPassword=`</dev/urandom tr -dc "A-Za-z0-9" 2> /dev/null | head -c 16`
-snmp-contact="contact"
-snmp-location="location" 
-snmp-logfile="/var/log/snmpd.log"
-snmp-directory="/var/net-snmp"
+snmpcontact="contact"
+snmplocation="location" 
+snmplogfile="/var/log/snmpd.log"
+snmpdirectory="/var/net-snmp"
 
 apk add wget unzip
 apk add build-base file perl-dev openssl-dev perl-net-snmp linux-headers
@@ -20,7 +20,7 @@ cd /tmp
 wget https://downloads.sourceforge.net/project/net-snmp/net-snmp/5.8/net-snmp-5.8.zip
 unzip net-snmp-5.8.zip
 cd net-snmp-5.8/
-./configure --enable-embedded-perl --enable-shared --with-sys-contact=$snmp-contact --with-sys-location=$snmp-location --with-logfile=$snmp-logfile --with-persistent-directory=$snmp-directory
+./configure --enable-embedded-perl --enable-shared --with-sys-contact=$snmpcontact --with-sys-location=$snmplocation --with-logfile=$snmplogfile --with-persistent-directory=$snmpdirectory
 make && make install
 
 cd /tmp
