@@ -12,16 +12,16 @@ apk add php7-pdo php7-pdo_pgsql php7-pdo_mysql php7-soap php7-xmlrpc php7-posix 
 apk add postgresql postgresql-client
 apk add zabbix zabbix-pgsql zabbix-webif zabbix-setup zabbix-agent
 
+cp snmptrapd /etc/init.d/snmptrapd
+chmod 644 /etc/init.d/snmptrapd
+chmod +x /etc/init.d/snmptrapd
+
 cd /tmp
 wget https://downloads.sourceforge.net/project/net-snmp/net-snmp/5.8/net-snmp-5.8.zip
 unzip net-snmp-5.8.zip
 cd net-snmp-5.8/
 ./configure --enable-embedded-perl --enable-shared --with-sys-contact=$snmp-contact --with-sys-location=$snmp-location --with-logfile=$snmp-logfile --with-persistent-directory=$snmp-directory
 make && make install
-
-cp snmptrapd /etc/init.d/snmptrapd
-chmod 644 /etc/init.d/snmptrapd
-chmod +x /etc/init.d/snmptrapd
 
 cd /tmp
 wget https://ufpr.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/4.2.1/zabbix-4.2.1.tar.gz
