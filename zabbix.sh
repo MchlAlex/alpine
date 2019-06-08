@@ -4,6 +4,7 @@ snmpcontact="contact"
 snmplocation="location" 
 snmplogfile="/var/log/snmpd.log"
 snmpdirectory="/var/net-snmp"
+snmpversion="2"
 
 apk add wget unzip
 apk add build-base file perl-dev openssl-dev perl-net-snmp linux-headers
@@ -20,7 +21,7 @@ cd /tmp
 wget https://downloads.sourceforge.net/project/net-snmp/net-snmp/5.8/net-snmp-5.8.zip
 unzip net-snmp-5.8.zip
 cd net-snmp-5.8/
-./configure --enable-embedded-perl --enable-shared --with-sys-contact=$snmpcontact --with-sys-location=$snmplocation --with-logfile=$snmplogfile --with-persistent-directory=$snmpdirectory
+./configure --enable-embedded-perl --enable-shared --with-default-snmp-version=$snmpversion --with-sys-contact=$snmpcontact --with-sys-location=$snmplocation --with-logfile=$snmplogfile --with-persistent-directory=$snmpdirectory
 make && make install
 
 cd /tmp
