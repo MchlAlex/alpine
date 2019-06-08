@@ -1,7 +1,11 @@
 #!/bin/ash
 DBPassword=`</dev/urandom tr -dc "A-Za-z0-9" 2> /dev/null | head -c 16`
+snmp-contact="contact"
+snmp-location="location" 
+snmp-logfile="/var/log/snmpd.log"
+snmp-directory="/var/net-snmp"
 
-apk add nano wget unzip
+apk add wget unzip
 apk add build-base file perl-dev openssl-dev perl-net-snmp linux-headers
 apk add lighttpd php7-common php7-iconv php7-json php7-gd php7-curl php7-xml php7-pgsql php7-imap php7-cgi fcgi
 apk add php7-pdo php7-pdo_pgsql php7-pdo_mysql php7-soap php7-xmlrpc php7-posix php7-mcrypt php7-gettext php7-ldap php7-ctype php7-dom php7-mbstring
@@ -12,38 +16,12 @@ cd /tmp
 wget https://downloads.sourceforge.net/project/net-snmp/net-snmp/5.8/net-snmp-5.8.zip
 unzip net-snmp-5.8.zip
 cd net-snmp-5.8/
-./configure --enable-embedded-perl --enable-shared
+./configure --enable-embedded-perl --enable-shared --with-sys-contact=$snmp-contact --with-sys-location=$snmp-location --with-logfile=$snmp-logfile --with-persistent-directory=$snmp-directory
 make && make install
 
-cat >> /etc/init.d/snmptrapd << EOL
-#!/sbin/openrc-run
-
-# for backward compat
-case "$SVCNAME" in
-snmpd) : ${OPTS:=$SNMPD_FLAGS} ;;
-esac
-
-pidfile="/var/run/${SVCNAME}.pid"
-command="/usr/local/bin/${SVCNAME}"
-command_args="-p ${pidfile} ${OPTS}"
-required_files="/usr/local/etc/snmp/${SVCNAME}.conf"
-extra_started_commands="reload"
-
-depend() {
-        use logger
-        need net
-        after firewall
-}
-
-reload() {
-        ebegin "Reloading ${SVCNAME}"
-        start-stop-daemon --signal HUP --pidfile ${pidfile} --name ${SVCNAME}
-        eend $?
-}
-EOL
-
+cp snmptrapd /etc/init.d/snmptrapd
 chmod 644 /etc/init.d/snmptrapd
-chmoc +x /etc/init.d/snmptrapd
+chmod +x /etc/init.d/snmptrapd
 
 cd /tmp
 wget https://ufpr.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/4.2.1/zabbix-4.2.1.tar.gz
